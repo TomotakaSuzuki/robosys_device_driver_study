@@ -2,7 +2,7 @@
 RaspberryPi3(Raspbian)での簡単なGPIOの制御
 ## Demo
 [RaspberryPi3 でLチカ](https://www.youtube.com/watch?v=EID06rcr3jk&feature=youtu.be)
-## Requirement
+## Requirements
 * RaspberryPi3
 * セットアップ
    * 参考: [RaspberryPiのセットアップ](https://togetter.com/li/1153861)
