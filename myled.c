@@ -17,12 +17,12 @@ static struct class *cls = NULL;
 static volatile u32 *gpio_base = NULL;
 static int gpio_number[3] = {2, 4, 17};
 
-static ssize_t led_write(struct file* filp, const char* buf, size_t count, lof$
+static ssize_t led_write(struct file* filp, const char* buf, size_t count, loff_t* pos)
 {
         char c;
         int i;
         int ct = 0;
-        int time = 250;
+        int time = 400;
         if (copy_from_user(&c, buf, sizeof(char))) {
                 return -EFAULT;
         }
@@ -31,7 +31,7 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, lof$
                         gpio_base[10] = 1 << gpio_number[i];
                 }
         } else if (c == '1') {
-                for (i = 0; i < 10; i++) {
+                for (i = 0; i < 15; i++) {
                         gpio_base[7] = 1 << gpio_number[0];
                         gpio_base[10] = 1 << gpio_number[1];
                         gpio_base[10] = 1 << gpio_number[2];
@@ -49,7 +49,27 @@ static ssize_t led_write(struct file* filp, const char* buf, size_t count, lof$
                 for (i = 0; i < 3; i++) {
                         gpio_base[10] = 1 << gpio_number[i];
                 }
-
+                ct = 0;
+        } else if (c == '2') {
+                for (i = 0; i < 15; i++) {
+                        gpio_base[10] = 1 << gpio_number[0];
+                        gpio_base[7] = 1 << gpio_number[1];
+                        gpio_base[10] = 1 << gpio_number[2];
+                        msleep(time - ct);
+                        gpio_base[7] = 1 << gpio_number[0];
+                        gpio_base[10] = 1 << gpio_number[1];
+                        gpio_base[7] = 1 << gpio_number[2];
+                        msleep(time - ct);
+                        gpio_base[10] = 1 << gpio_number[0];
+                        gpio_base[7] = 1 << gpio_number[1];
+                        gpio_base[10] = 1 << gpio_number[2];
+                        msleep(time - ct);
+                        ct += 25;
+                }
+                for (i = 0; i < 3; i++) {
+                        gpio_base[10] = 1 << gpio_number[i];
+                }
+                ct = 0;
         }
         return 1;
 }
